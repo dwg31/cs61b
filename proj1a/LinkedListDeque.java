@@ -1,5 +1,5 @@
 /**
- * Project 1a: implementing Double Ended Queue (Deque) using linked lists.
+ * Project 1a pt.1: implementing Double Ended Queue (Deque) using linked lists.
  * @author Dawei Gu
  */
 
@@ -19,7 +19,6 @@ public class LinkedListDeque<T> {
 
     private Node sentinel = new Node(null, null, null);
     private int size = 0;
-    //private Node last;
 
     /* Creates an empty Deque */
     public LinkedListDeque() {
@@ -28,16 +27,14 @@ public class LinkedListDeque<T> {
         size = 0;
     }
 
-    /**
-    /* Create a one-item Deque
-    public LinkedListDeque(T item) {
+    public LinkedListDeque(LinkedListDeque other) {
+        //Node sentinel = new Node(null, null, null);
         sentinel.previous = sentinel;
         sentinel.next = sentinel;
-        sentinel.next = new Node(sentinel, item ,sentinel);
-        sentinel.previous = sentinel.next;
-        size = 1;
+        for (int i = 0; i < other.size(); i += 1) {
+            addLast((T) other.get(i));
+        }
     }
-    */
 
     /* Adds an item of type T to the front of the deque. */
     public void addFirst(T item) {
@@ -120,20 +117,5 @@ public class LinkedListDeque<T> {
             p = p.next;
         }
         return p.item;
-    }
-
-    public static void main(String[] args) {
-        LinkedListDeque<String> a = new LinkedListDeque<>();
-        a.addFirst("You ");
-        a.addLast("are ");
-        a.addLast("smart!");
-        System.out.println(a.get((1)));
-        System.out.println(a.isEmpty());
-        System.out.println(a.size());
-        a.printDeque();
-        a.removeFirst();
-        a.printDeque();
-        a.removeLast();
-        a.printDeque();
     }
 }
