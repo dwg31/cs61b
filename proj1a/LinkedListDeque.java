@@ -70,7 +70,7 @@ public class LinkedListDeque<T> {
         } else {
             Node p = sentinel.next;
             for (int i = 0; i < size; i += 1) {
-                System.out.print(p.item);
+                System.out.print(p.item + " ");
                 p = p.next;
             }
             System.out.print("\n");
