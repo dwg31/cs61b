@@ -1,12 +1,14 @@
 package es.datastructur.synthesizer;
 
+import java.util.Iterator;
+
 /** Interface for all classes that implements BoundedQueue.
  *
  * @param <T>
  *
  * @author Dawei Gu
  */
-public interface BoundedQueue<T> {
+public interface BoundedQueue<T> extends Iterable<T>{
     /** Return size of the buffer.
      *
      */
@@ -46,5 +48,8 @@ public interface BoundedQueue<T> {
     default boolean isFull() {
         return fillCount() == capacity();
     }
+
+    /** Returns an Iterator of type T. */
+    Iterator<T> iterator();
 
 }

@@ -103,7 +103,7 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
             throw new RuntimeException("Ring Buffer underflow");
         }
 
-        T returnItem = rb[decrement(last)];
+        T returnItem = rb[first];
         first = increment(first);
         fillCount -= 1;
 
@@ -119,6 +119,66 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
             throw new RuntimeException("Ring Buffer underflow");
         }
         return rb[first];
+    }
+
+    /** Returns an Iterator of type T. */
+    @Override
+    public Iterator<T> iterator() {
+        return new ArrayRingBufferIterator();
+    }
+
+    /** Returns equal only if the other object is
+     *  an ArrayRingBuffer with the exact same values. */
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null) {
+            return false;
+        }
+        if (this.getClass() != other.getClass()) {
+            return false;
+        }
+
+        ArrayRingBuffer o = (ArrayRingBuffer) other;
+
+        Iterator thisIterator = this.iterator();
+        Iterator otherIterator = o.iterator();
+
+        while (thisIterator.hasNext() && otherIterator.hasNext()) {
+            if (thisIterator.next() != otherIterator.next()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** A private class that makes ArrayRingBuffer iterable. */
+    private class ArrayRingBufferIterator implements Iterator<T> {
+        /** Current position of pointer. */
+        private int ptr;
+        /** Count how many items has been accessed. */
+        private int count;
+
+        /** Constructor. */
+        ArrayRingBufferIterator() {
+            ptr = 0;
+            count = 0;
+        }
+
+        /** Returns true if iterable has next item. */
+        public boolean hasNext() {
+            return count < capacity();
+        }
+
+        /** Returns the next item of the iterable. */
+        public T next() {
+            T returnItem = rb[ptr];
+            ptr = increment(ptr);
+            count += 1;
+            return returnItem;
+        }
     }
 
 }
