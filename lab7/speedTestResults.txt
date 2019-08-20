@@ -1,0 +1,61 @@
+Random
+----------------------------------------------------------------
+Test 1--Adding 10,000,000 strings of length 10 to the maps.
+
+--Stack Overflow -- couldn't add 10000000 strings of length 10.
+class BSTMap: 41.12 sec
+Java's Built-in TreeMap: 30.25 sec
+
+----------------------------------------------------------------
+Test 2--Adding 100,000 strings of length 10 to the maps.
+
+--Stack Overflow -- couldn't add 100000 strings of length 10.
+class BSTMap: 0.09 sec
+Java's Built-in TreeMap: 1.13 sec
+
+-----------------------------------------------------------------
+Test 3--Adding 10,000 strings of length 10 to the maps.
+
+class ULLMap: 0.42 sec
+class BSTMap: 0.00 sec
+Java's Built-in TreeMap: 0.00 sec
+
+
+Ordered
+----------------------------------------------------------------
+Test 1--Adding 1,000 strings to the maps.
+
+class ULLMap: 0.03 sec
+class BSTMap: 0.02 sec
+Java's Built-in TreeMap: 0.00 sec
+Java's Built-in HashMap: 0.00 sec
+
+----------------------------------------------------------------
+Test 2--Adding 100,000 strings to the maps.
+--Stack Overflow -- couldn't add 100000 strings.
+--Stack Overflow -- couldn't add 100000 strings.
+Java's Built-in TreeMap: 0.16 sec
+Java's Built-in HashMap: 0.07 sec
+
+----------------------------------------------------------------
+Test 3--Adding 10,000 strings to the maps.
+
+class ULLMap: 0.90 sec
+class BSTMap: 1.28 sec
+Java's Built-in TreeMap: 0.01 sec
+Java's Built-in HashMap: 0.00 sec
+
+----------------------------------------------------------------
+Test 4--Adding 30,000 strings to the maps.
+
+class ULLMap: 26.99 sec
+--Stack Overflow -- couldn't add 30000 strings.
+Java's Built-in TreeMap: 0.02 sec
+Java's Built-in HashMap: 0.02 sec
+
+
+Thoughts:
+Inserting ordered strings into BSTMap is slow because it ended up
+with a LOOOOONG "chain" of strings (Or a very TALLLL tree). And every time we try to insert
+another entry, we have to go through the whole tree whose run time is Θ(N!). Inserting random
+String's run time is Θ(log N).
