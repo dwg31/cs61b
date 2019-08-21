@@ -1,13 +1,13 @@
 import static java.lang.Math.abs;
 
 /**
- * A class that implements the method which returns true if the two input characters are
- * off by (int)N
+ * A class that implements the method which returns true if
+ * the two input characters are off by (int)N.
  *
  * @author Dawei Gu
  */
 
-public class OffByN implements CharacterComparator{
+public class OffByN implements CharacterComparator {
 
     private int N;
 
