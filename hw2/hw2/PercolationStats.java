@@ -2,8 +2,12 @@ package hw2;
 
 import edu.princeton.cs.introcs.StdRandom;
 import edu.princeton.cs.introcs.StdStats;
-import java.lang.Math;
 
+/** A class that uses Monte Carlo simulation
+ * to calculate the threshold of percolation.
+ *
+ * @author Dawei Gu
+ */
 public class PercolationStats {
     /** an array that stores the percolation threshold
      * calculated in every simulation.
@@ -28,7 +32,7 @@ public class PercolationStats {
         for (int i = 0; i < T; i += 1) {
             Percolation sim = pf.make(N);
 
-            while(!sim.percolates()) {
+            while (!sim.percolates()) {
                 row = StdRandom.uniform(N);
                 col = StdRandom.uniform(N);
                 sim.open(row, col);

@@ -3,16 +3,24 @@ package hw2;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 /**
- * Percolation data type
+ * Percolation data type.
  *
  * @author Dawei Gu
  */
 public class Percolation {
+    /** size of the field. */
     private int size;
+    /** number of opened sites. */
     private int numOfOpened;
+    /** the field. */
     private WeightedQuickUnionUF fields;
+    /** the field without bottom. */
+    private WeightedQuickUnionUF fieldsNoBtm;
+    /** the status of the every sites field. */
     private boolean[][] openStatus;
+    /** top site of the field, represents ocean. */
     private int top;
+    /** bottom site of the field, represents earth core. */
     private int bottom;
 
     /** create N by N grid, with all sites initially blocked.
@@ -26,6 +34,7 @@ public class Percolation {
             size = N;
             numOfOpened = 0;
             fields = new WeightedQuickUnionUF(N * N + 2);
+            fieldsNoBtm = new WeightedQuickUnionUF(N * N + 1);
             openStatus = new boolean[N][N];
             top = 0;
             bottom = N * N + 1;
@@ -43,8 +52,11 @@ public class Percolation {
         }
     }
 
-    /** convert 2D coordinate to 1D number
+    /** convert 2D coordinate to 1D number.
      *
+     * @param row row number
+     * @param col column number
+     * @return the converted 1D number
      */
     private int xyTo1D(int row, int col) {
         if (row < 0 || row > size - 1 || col < 0 || col > size - 1) {
@@ -70,21 +82,26 @@ public class Percolation {
 
             if (row == 0) {
                 fields.union(num, top);
+                fieldsNoBtm.union(num, top);
             }
             if (row == size - 1) {
                 fields.union(num, bottom);
             }
             if (row > 0 && isOpen(row - 1, col)) {
                 fields.union(xyTo1D(row, col), xyTo1D(row - 1, col));
+                fieldsNoBtm.union(xyTo1D(row, col), xyTo1D(row - 1, col));
             }
             if (row + 1 < size && isOpen(row + 1, col)) {
                 fields.union(xyTo1D(row, col), xyTo1D(row + 1, col));
+                fieldsNoBtm.union(xyTo1D(row, col), xyTo1D(row + 1, col));
             }
             if (col > 0 && isOpen(row, col - 1)) {
                 fields.union(xyTo1D(row, col), xyTo1D(row, col - 1));
+                fieldsNoBtm.union(xyTo1D(row, col), xyTo1D(row, col - 1));
             }
             if (col + 1 < size && isOpen(row, col + 1)) {
                 fields.union(xyTo1D(row, col), xyTo1D(row, col + 1));
+                fieldsNoBtm.union(xyTo1D(row, col), xyTo1D(row, col + 1));
             }
         }
     }
@@ -110,7 +127,7 @@ public class Percolation {
         validate(row, col);
 
         int num = xyTo1D(row, col);
-        return fields.connected(top, num);
+        return fieldsNoBtm.connected(top, num);
     }
 
     /** number of open sites.
@@ -144,7 +161,7 @@ public class Percolation {
         for (int i = 5; i < 10; i += 1) {
             sample.open(i, 9);
         }
-        System.out.println(sample.isFull(4,4));
+        System.out.println(sample.isFull(4, 4));
         System.out.println(sample.percolates());
         System.out.println(sample.numberOfOpenSites());
     }
