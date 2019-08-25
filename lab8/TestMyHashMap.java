@@ -7,6 +7,23 @@ import java.util.Set;
 public class TestMyHashMap {
 
     @Test
+    public void testResize() {
+        MyHashMap<String, Integer> testMap = new MyHashMap<>();
+        for (int i = 0; i < 20; i += 1) {
+            testMap.put("hi" + i, i);
+        }
+        assertEquals(32, testMap.getNumOfBuckets());
+        for (int i = 20; i < 40; i += 1) {
+            testMap.put("hi" + i, i);
+        }
+        assertEquals(64, testMap.getNumOfBuckets());
+        for (int i = 40; i < 1000; i += 1) {
+            testMap.put("hi" + i, i);
+        }
+        assertEquals(2048, testMap.getNumOfBuckets());
+    }
+
+    @Test
     public void sanityGenericsTest() {
         try {
             MyHashMap<String, String> a = new MyHashMap<String, String>();
