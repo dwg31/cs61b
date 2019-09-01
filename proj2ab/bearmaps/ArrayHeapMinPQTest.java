@@ -5,7 +5,7 @@ import edu.princeton.cs.algs4.Stopwatch;
 import static org.junit.Assert.*;
 
 public class ArrayHeapMinPQTest {
-    private void speedHelp(ExtrinsicMinPQ<String> pq, int n) {
+    private void speedHelp(ExtrinsicMinPQ<String> pq, int n, int m) {
         Stopwatch sw = new Stopwatch();
         for (int i = 0; i < n; i += 1) {
             pq.add("hi" + i, Math.random());
@@ -13,14 +13,11 @@ public class ArrayHeapMinPQTest {
         System.out.println("Adding " + n + " items costs "
                 + pq.getClass() + ' ' + sw.elapsedTime() + " seconds.");
         sw = new Stopwatch();
-        for (int i = 0; i < n / 2; i += 1) {
+        for (int i = 0; i < m; i += 1) {
             pq.removeSmallest();
         }
-        System.out.println("Removing " + n / 2 + " items costs "
+        System.out.println("Removing " + m + " items costs "
                 + pq.getClass() + ' ' + sw.elapsedTime() + " seconds.");
-        for (int i = 0; i < n / 2; i += 1) {
-            pq.removeSmallest();
-        }
         System.out.println();
     }
 
@@ -28,18 +25,8 @@ public class ArrayHeapMinPQTest {
     public void testSpeed() {
         ExtrinsicMinPQ<String> heap = new ArrayHeapMinPQ<>();
         ExtrinsicMinPQ<String> naive = new NaiveMinPQ<>();
-        speedHelp(heap, 10);
-        speedHelp(naive, 10);
-        speedHelp(heap, 1000);
-        speedHelp(naive, 1000);
-        speedHelp(heap, 2000);
-        speedHelp(naive, 2000);
-        speedHelp(heap, 4000);
-        speedHelp(naive, 4000);
-        speedHelp(heap, 8000);
-        speedHelp(naive, 8000);
-        speedHelp(heap, 16000);
-        speedHelp(naive, 16000);
+        speedHelp(heap, 1000000, 1000);
+        speedHelp(naive, 1000000, 1000);
     }
 
     @Test
