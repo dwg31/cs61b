@@ -23,7 +23,7 @@ import static bearmaps.proj2c.utils.Constants.ROUTE_LIST;
 /**
  * Handles requests from the web browser for map images. These images
  * will be rastered into one large image to be displayed to the user.
- * @author rahul, Josh Hug, _________
+ * @author rahul, Josh Hug, Dawei Gu
  */
 public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<String, Object>> {
 
@@ -84,11 +84,58 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
      */
     @Override
     public Map<String, Object> processRequest(Map<String, Double> requestParams, Response response) {
-        //System.out.println("yo, wanna know the parameters given by the web browser? They are:");
-        //System.out.println(requestParams);
+        //TODO: optimize code for better readability.
         Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
-                + "your browser.");
+        results.put("query_success", false);
+        double requestLRLon = requestParams.get("lrlon");
+        double requestLRLat = requestParams.get("lrlat");
+        double requestULLon = requestParams.get("ullon");
+        double requestULLat = requestParams.get("ullat");
+        double width = requestParams.get("w");
+        if (requestLRLon <= requestULLon || requestLRLat >= requestULLat) {
+            return results;
+        }
+        double ullon = Constants.ROOT_ULLON;
+        double ullat = Constants.ROOT_ULLAT;
+        double lrlon = Constants.ROOT_LRLON;
+        double lrlat = Constants.ROOT_LRLAT;
+        double lonDPP = (requestLRLon - requestULLon) / width;
+        double imageDPP = (lrlon - ullon) / Constants.TILE_SIZE;
+        int depth = 0;
+        while (imageDPP > lonDPP && depth < 7) {
+            imageDPP /= 2;
+            depth++;
+        }
+        int partition = (int) Math.pow(2, depth);
+        double rasterWidth = -(ullon - lrlon) / partition;
+        double rasterHeight = (ullat - lrlat) / partition;
+        int xStart = (int) ((requestULLon - ullon) / rasterWidth);
+        int yStart = (int) ( - (requestULLat - ullat) / rasterHeight);
+        int xEnd = xStart;
+        int yEnd = yStart;
+        while(ullon + xEnd * rasterWidth < requestLRLon) {
+            xEnd++;
+        }
+        while(ullat - yEnd * rasterHeight > requestLRLat) {
+            yEnd++;
+        }
+        if (xStart < partition && yStart < partition) {
+            String[][] render_grid = new String[yEnd - yStart][xEnd - xStart];
+
+            for (int i = xStart; i < xEnd && i < partition; i++) {
+                for (int j = yStart; j < yEnd && j < partition; j++) {
+                    render_grid[j - yStart][i - xStart] = String.format("d%d_x%d_y%d.png", depth, i, j);
+                }
+            }
+            results.put("render_grid", render_grid);
+            results.put("raster_ul_lon", ullon + xStart * rasterWidth);
+            results.put("raster_ul_lat", ullat - yStart * rasterHeight);
+            results.put("raster_lr_lon", ullon + xEnd * rasterWidth);
+            results.put("raster_lr_lat", ullat - yEnd * rasterHeight);
+            results.put("depth", depth);
+            results.put("query_success", true);
+            return results;
+        }
         return results;
     }
 
