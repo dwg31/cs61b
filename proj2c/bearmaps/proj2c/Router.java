@@ -2,6 +2,7 @@ package bearmaps.proj2c;
 
 import bearmaps.hw4.AStarSolver;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -40,8 +41,75 @@ public class Router {
      * route.
      */
     public static List<NavigationDirection> routeDirections(AugmentedStreetMapGraph g, List<Long> route) {
-        /* fill in for part IV */
+/*        long previous = route.get(0);
+        List<NavigationDirection> directions = new LinkedList<>();
+        NavigationDirection n = new NavigationDirection();
+        n.distance = 0;
+        int i = 0;
+
+        for (long next : route) {
+            if (!Objects.equals(g.getName(next), g.getName(previous))) {
+                double bearing = NavigationDirection.bearing(g.lat(previous), g.lat(next),
+                                                             g.lon(previous), g.lon(next));
+                n.direction = findDirection(bearing);
+                directions.add(n);
+                n = new NavigationDirection();
+                n.distance = 0;
+                previous = next;
+                continue;
+            }
+            if (next != previous) {
+                if (g.getName(next) != null) {
+                    n.way = g.getName(next);
+                } else {
+                    n.way = NavigationDirection.UNKNOWN_ROAD;
+                }
+                n.distance += distanceCal(g, previous, next);
+            } else {
+                n.direction = NavigationDirection.START;
+            }
+            previous = next;
+        }
+
+ */
         return null;
+    }
+
+    private static double distanceCal(AugmentedStreetMapGraph g, long node1, long node2) {
+        double lat1 = g.lat(node1);
+        double lon1 = g.lon(node1);
+        double lat2 = g.lat(node2);
+        double lon2 = g.lon(node2);
+        double theta = lon1 - lon2;
+        double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) +
+               Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+               Math.cos(Math.toRadians(theta));
+        dist = Math.acos(dist);
+        dist = Math.toDegrees(dist);
+        dist = dist * 60 * 1.1515;
+        return dist;
+    }
+
+    private static int findDirection(double bearing) {
+        if (bearing >= -30 && bearing < -15) {
+            return  NavigationDirection.SLIGHT_LEFT;
+        }
+        if (bearing >= -100 && bearing < -30) {
+            return  NavigationDirection.LEFT;
+        }
+        if (bearing < -100) {
+            return  NavigationDirection.SHARP_LEFT;
+        }
+        if (bearing <= 30 && bearing > 15) {
+            return  NavigationDirection.SLIGHT_RIGHT;
+        }
+        if (bearing <= 100 && bearing > 30) {
+            return  NavigationDirection.RIGHT;
+        }
+        if (bearing > 100) {
+            return  NavigationDirection.SHARP_RIGHT;
+        }
+        return NavigationDirection.STRAIGHT;
     }
 
     /**

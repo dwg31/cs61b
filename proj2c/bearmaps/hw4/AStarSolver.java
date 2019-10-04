@@ -27,13 +27,15 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
 
 
     public AStarSolver(AStarGraph<Vertex> input, Vertex start, Vertex end, double timeout) {
-        Stopwatch sw = new Stopwatch();
+//        Stopwatch sw = new Stopwatch();
+        double startTime = System.currentTimeMillis();
         numStatesExplored = 0;
 
         fringe.add(start, 0 + input.estimatedDistanceToGoal(start, end));
         distTo.put(start, 0.0);
 
-        while (fringe.size() > 0 && sw.elapsedTime() < timeout && !fringe.getSmallest().equals(end)) {
+        while (fringe.size() > 0 && (System.currentTimeMillis() - startTime) / 1000 < timeout
+                && !fringe.getSmallest().equals(end)) {
             Vertex v = fringe.removeSmallest();
             numStatesExplored += 1;
             for (WeightedEdge<Vertex> neighbor : input.neighbors(v)) {
@@ -55,7 +57,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
         } else {
             outcome = SolverOutcome.TIMEOUT;
         }
-        explorationTime = sw.elapsedTime();
+        explorationTime = (System.currentTimeMillis() - startTime) / 1000;
     }
 
     private void relax(WeightedEdge<Vertex> neighbor, double h) {
