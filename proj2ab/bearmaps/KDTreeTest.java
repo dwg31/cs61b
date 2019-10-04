@@ -30,7 +30,7 @@ public class KDTreeTest {
     }
 
     private double speedTestHelper(PointSet set) {
-        Random random = new Random(System.currentTimeMillis());
+        Random random = new Random(10);
         Stopwatch sw = new Stopwatch();
         for (int i = 0; i < 10000; i += 1) {
             double x = random.nextDouble() * 100;
@@ -54,6 +54,24 @@ public class KDTreeTest {
         System.out.println("10,000 queries with 100,000 points costs(seconds)");
         System.out.println("KDTree: " + speedTestHelper(kd));
         System.out.println("NaivePointSet:" + speedTestHelper(naive));
+    }
+
+    @Test
+    public void testCorrectness() {
+        ArrayList<Point> points = new ArrayList<>();
+        Random random = new Random(System.currentTimeMillis());
+        for (int i = 0; i < 100000; i += 1) {
+            double x = random.nextDouble() * 100;
+            double y = random.nextDouble() * 100;
+            points.add(new Point(x, y));
+        }
+        KDTree kd = new KDTree(points);
+        NaivePointSet naive = new NaivePointSet(points);
+        for (int i = 0; i < 1000; i += 1) {
+            double x = random.nextDouble() * 100;
+            double y = random.nextDouble() * 100;
+            assertEquals(kd.nearest(x, y), naive.nearest(x, y));
+        }
     }
 }
 
